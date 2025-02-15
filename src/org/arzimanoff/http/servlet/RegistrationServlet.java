@@ -1,6 +1,7 @@
 package org.arzimanoff.http.servlet;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import org.arzimanoff.http.util.JspHelper;
 import java.io.IOException;
 import java.util.List;
 
+@MultipartConfig(fileSizeThreshold = 1024 * 1024)
 @WebServlet("/registration")
 public class RegistrationServlet extends HttpServlet {
 
@@ -30,6 +32,8 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+
         var createUserDto = CreateUserDto.builder()
                 .name(req.getParameter("userName"))
                 .birthday(req.getParameter("birthday"))

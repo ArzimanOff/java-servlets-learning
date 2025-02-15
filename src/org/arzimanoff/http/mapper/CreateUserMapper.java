@@ -9,6 +9,7 @@ import org.arzimanoff.http.util.LocalDateFormatter;
 
 public class CreateUserMapper implements Mapper<CreateUserDto, User>{
 
+    private static final String IMAGE_FOLDER = "users/";
     private static final CreateUserMapper INSTANCE = new CreateUserMapper();
     private CreateUserMapper() {
     }

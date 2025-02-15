@@ -12,11 +12,12 @@
     <title>Title</title>
 </head>
 <body>
-    <h1>Билеты к рейсу:</h1>
-    <ul>
-        <c:forEach var="ticket" items="${requestScope.tickets}">
-            <li> ${ticket.seatNo} ${ticket.passengerName} </li>
-        </c:forEach>
-    </ul>
+<%@include file="header.jsp" %>
+<h1>Билеты к рейсу:</h1>
+<ul>
+    <c:forEach var="ticket" items="${requestScope.tickets}">
+        <li> ${ticket.seatNo} ${ticket.passengerName} </li>
+    </c:forEach>
+</ul>
 </body>
 </html>

@@ -1,13 +1,12 @@
 package org.arzimanoff.http.dao;
 
 import lombok.SneakyThrows;
+import org.arzimanoff.http.entity.Gender;
+import org.arzimanoff.http.entity.Role;
 import org.arzimanoff.http.entity.User;
 import org.arzimanoff.http.util.ConnectionManager;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +18,12 @@ public class UserDao implements Dao<Integer, User> {
             INSERT INTO users(name, birthday, email, password, role, gender)
             VALUES (?, ?, ?, ?, ?, ?);
             """;
+
+    private static final String SQL_GET_USER_BY_LOGIN_AND_PASSWORD = """
+            SELECT * FROM users
+            WHERE email = ? AND password = ?
+            """;
+
 
     private UserDao() {
 
@@ -44,6 +49,24 @@ public class UserDao implements Dao<Integer, User> {
 
     }
 
+    @SneakyThrows
+    public Optional<User> findByEmailAndPassword(String email, String password) {
+        var connection = ConnectionManager.get();
+        var preparedStatement = connection.prepareStatement(SQL_GET_USER_BY_LOGIN_AND_PASSWORD);
+
+        preparedStatement.setObject(1, email);
+        preparedStatement.setObject(2, password);
+        var resultSet = preparedStatement.executeQuery();
+
+        User user = null;
+        if (resultSet.next()) {
+            user = buildEntity(resultSet);
+        }
+
+
+        return Optional.ofNullable(user);
+    }
+
     @Override
     @SneakyThrows
     public User save(User entity) {
@@ -65,7 +88,20 @@ public class UserDao implements Dao<Integer, User> {
         }
     }
 
+
     public static UserDao getInstance() {
         return INSTANCE;
+    }
+
+    private static User buildEntity(ResultSet resultSet) throws SQLException {
+        return User.builder()
+                .id(resultSet.getObject("id", Integer.class))
+                .name(resultSet.getObject("name", String.class))
+                .birthday(resultSet.getObject("birthday", Date.class).toLocalDate())
+                .email(resultSet.getObject("email", String.class))
+                .password(resultSet.getObject("password", String.class))
+                .role(Role.valueOf(resultSet.getObject("role", String.class)))
+                .gender(Gender.valueOf(resultSet.getObject("gender", String.class)))
+                .build();
     }
 }

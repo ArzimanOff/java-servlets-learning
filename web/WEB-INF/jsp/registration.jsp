@@ -13,21 +13,25 @@
     <title>Title</title>
 </head>
 <body>
-<form action="/registration" method="post">
+<form action="/registration" method="post" enctype="multipart/form-data">
     <label for="userName"> Name:
         <input type="text" name="userName" id="userName">
     </label>
     <br>
     <label for="birthday"> Birthday:
-        <input type="date" name="birthday" id="birthday">
+        <input type="date" name="birthday" id="birthday" required>
+    </label>
+    <br>
+    <label for="image"> Image:
+        <input type="file" name="image" id="image">
     </label>
     <br>
     <label for="email"> Email:
-        <input type="text" name="email" id="email">
+        <input type="text" name="email" id="email" required>
     </label>
     <br>
     <label for="password"> Password:
-        <input type="password" name="password" id="password">
+        <input type="password" name="password" id="password" required>
     </label>
     <br>
     <label for="role">
@@ -48,6 +52,9 @@
     <br>
     <button type="submit"> Отправить! </button>
     <br>
+
+    <a href="${pageContext.request.contextPath}/login">Есть аккаунт? Войти</a>
+
 
     <c:if test="${not empty requestScope.errors}">
         <div style="color: crimson">
